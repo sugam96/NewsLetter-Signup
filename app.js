@@ -9,7 +9,6 @@ const https = require("https")
 const app = express();
 const port = 3000;
 const API_KEY = process.env.API_KEY;
-//console.log(typeof(API_KEY));
 
 
 app.use(bodyparser.urlencoded({ extended: true }));
@@ -19,6 +18,7 @@ app.use(express.static(__dirname + '/public'));
 app.get("/", function (req, res) {
     res.sendFile(__dirname + "/signup.html");
 });
+
 
 app.post("/", function (req, res) {
     console.log("Posting");
@@ -43,20 +43,32 @@ app.post("/", function (req, res) {
         method: "POST",
         auth: "Sugam1:" + API_KEY
     }
-    console.log(options.auth);
-    
+    //console.log(options.auth);
+
     const request = https.request(URL, options, function (response) {
         response.on("data", function (data) {
-            console.log(JSON.parse(data));
-            
+            //console.log(JSON.parse(data));
+            if (response.statusCode === 200) {
+                //res.send("Successfully Subscribed!");
+                res.sendFile(__dirname + "/success.html")
+                console.log("Success");
+            }
+            else {
+                //res.send("Something Went Wrong, Please Try Again!");
+                res.sendFile(__dirname + "/failure.html")
+                console.log("Failure");
+            }
         })
     })
-
     request.write(jsonData);
     request.end();
 });
 
+app.post("/failure", function (req, res) {
+    //console.log("Redirecting");
+    res.sendFile(__dirname + "/signup.html");
+});
+
 app.listen(port, function () {
     console.log("Server up and running at port ", port)
-
 })
