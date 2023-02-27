@@ -7,7 +7,7 @@ const https = require("https")
 
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 const API_KEY = process.env.API_KEY;
 
 
@@ -18,7 +18,6 @@ app.use(express.static(__dirname + '/public'));
 app.get("/", function (req, res) {
     res.sendFile(__dirname + "/signup.html");
 });
-
 
 app.post("/", function (req, res) {
     console.log("Posting");
@@ -69,6 +68,7 @@ app.post("/failure", function (req, res) {
     res.sendFile(__dirname + "/signup.html");
 });
 
-app.listen(port, function () {
+//Works for both Heroku and localhost 3000
+app.listen(port || 3000, function () {
     console.log("Server up and running at port ", port)
-})
+});
